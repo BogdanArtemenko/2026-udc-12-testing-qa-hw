@@ -33,10 +33,15 @@ test("e-bikes are billed at the e-bike rate", () => {
   assert.equal(result.total, result.timeCharge);
 });
 
-test("subscribers ride the first 45 minutes free", () => {
-  for (const bike of ["classic", "ebike"]) {
-    const result = quote(ride("2026-09-16T07:00:00Z", "2026-09-16T07:40:00Z", { bike }), { type: "subscriber" });
-    assert.equal(result.total, 0);
+test("subscribers get 45 free classic minutes but a 20 percent ebike discount", () => {
+  const classic = quote(ride("2026-09-16T07:00:00Z", "2026-09-16T07:45:00Z", { bike: "classic" }), { type: "subscriber" });
+  assert.equal(classic.total, 0);
+
+  for (const minutes of [30, 45]) {
+    const result = quote(ride("2026-09-16T07:00:00Z", `2026-09-16T07:${String(minutes).padStart(2, "0")}:00Z`, { bike: "ebike" }), { type: "subscriber" });
+    assert.equal(result.timeCharge, 4000 * Math.ceil(minutes / 30));
+    assert.deepEqual(result.discounts, [{ code: "subscription", amount: result.timeCharge * 0.2 }]);
+    assert.equal(result.total, result.timeCharge * 0.8);
   }
 });
 
