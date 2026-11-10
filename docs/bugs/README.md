@@ -52,7 +52,7 @@
 | `uses the ebike rate` | pass | fail | BUG-2: тест використовує 2 хв і очікує тариф e-bike, хоча T2 робить поїздку безкоштовною |
 | `applies reduced fare to time charge and out-of-zone fee` | pass | fail | BUG-2: тест використовує 2 хв; T2 скасовує timeCharge і тому reduced discount, а T7-збір залишається окремим |
 | `subscriber gets 45 free minutes and charges the next block` | pass | pass | без зміни; classic-сценарій понад 2 хв |
-| `subscriber ebike subscription reduces its billed block by twenty percent` | fail | fail | хибний тест в обох прогонах: очікує 3200 коп. знижки, але T4 `docs/spec/tariffs.md:74-77` для 75 хв дає знижку 1600 коп. |
+| `subscriber ebike subscription reduces its billed block by twenty percent` | fail | fail | хибний тест в обох прогонах: очікує 3200 коп. знижки, але T4 `docs/spec/tariffs.md:74-77` для 46 хв (`SUBSCRIPTION_FREE_MINUTES + 1`) дає базову суму 8000 коп., знижку 1600 коп. і підсумок 6400 коп. |
 | `subscriber concession chooses the cheaper reduced plan when applicable` | fail | fail | хибний tie-breaker: T5 `docs/spec/tariffs.md:89-96` вимагає абонемент при однаковій сумі, не reduced |
 | `applies night discount only before six Kyiv time` | pass | fail | BUG-2: нічний сценарій має 2 хв; T2 дає базову суму 0, тому нічна знижка не створюється |
 | `adds out-of-zone and unreturned fees without applying them to time charge` | fail | fail | хибне очікування total: T6 `docs/spec/tariffs.md:98-103` обмежує погодинну частину 30000 |

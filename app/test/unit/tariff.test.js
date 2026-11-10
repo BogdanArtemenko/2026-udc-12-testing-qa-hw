@@ -37,11 +37,11 @@ test("subscribers get 45 free classic minutes but a 20 percent ebike discount", 
   const classic = quote(ride("2026-09-16T07:00:00Z", "2026-09-16T07:45:00Z", { bike: "classic" }), { type: "subscriber" });
   assert.equal(classic.total, 0);
 
-  for (const minutes of [30, 45]) {
+  for (const [minutes, timeCharge, discountAmount, total] of [[30, 4000, 800, 3200], [45, 8000, 1600, 6400]]) {
     const result = quote(ride("2026-09-16T07:00:00Z", `2026-09-16T07:${String(minutes).padStart(2, "0")}:00Z`, { bike: "ebike" }), { type: "subscriber" });
-    assert.equal(result.timeCharge, 4000 * Math.ceil(minutes / 30));
-    assert.deepEqual(result.discounts, [{ code: "subscription", amount: result.timeCharge * 0.2 }]);
-    assert.equal(result.total, result.timeCharge * 0.8);
+    assert.equal(result.timeCharge, timeCharge);
+    assert.deepEqual(result.discounts, [{ code: "subscription", amount: discountAmount }]);
+    assert.equal(result.total, total);
   }
 });
 
